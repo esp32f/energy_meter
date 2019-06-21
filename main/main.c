@@ -1,12 +1,3 @@
-/* Console example
-
-   This example code is in the Public Domain (or CC0 licensed, at your option.)
-
-   Unless required by applicable law or agreed to in writing, this
-   software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR
-   CONDITIONS OF ANY KIND, either express or implied.
-*/
-
 #include <stdio.h>
 #include <string.h>
 #include "esp_system.h"
@@ -21,19 +12,17 @@
 #include "nvs.h"
 #include "nvs_flash.h"
 
-static const char* TAG = "example";
 
-/* Console command history can be stored to and loaded from a file.
- * The easiest way to do this is to use FATFS filesystem on top of
- * wear_levelling library.
- */
+
+static const char* TAG = "energy";
+
+
+
 #if CONFIG_STORE_HISTORY
-
 #define MOUNT_PATH "/data"
 #define HISTORY_PATH MOUNT_PATH "/history.txt"
 
-static void initialize_filesystem()
-{
+static void initialize_filesystem() {
     static wl_handle_t wl_handle;
     const esp_vfs_fat_mount_config_t mount_config = {
             .max_files = 4,
@@ -46,6 +35,8 @@ static void initialize_filesystem()
     }
 }
 #endif // CONFIG_STORE_HISTORY
+
+
 
 static void initialize_nvs()
 {
