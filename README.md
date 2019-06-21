@@ -1,5 +1,10 @@
 # Console example
 
+```text
+includePath:
+/home/wolfram77/esp/esp-idf/components/**
+```
+
 This example illustrates usage of `console` component to create an interactive shell.
 
 ## Configuring UART and VFS
