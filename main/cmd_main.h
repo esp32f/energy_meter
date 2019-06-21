@@ -102,6 +102,15 @@ static void setup_linenoise() {
   // Load command history from filesystem
   linenoiseHistoryLoad(HISTORY_PATH);
 #endif
+  // Figure out if the terminal supports escape sequences
+  int probe_status = linenoiseProbe();
+  if (probe_status) { // zero indicates success
+    printf("\n"
+            "Your terminal application does not support escape sequences.\n"
+            "Line editing and history features are disabled.\n"
+            "On Windows, try using Putty instead.\n");
+    linenoiseSetDumbMode(1);
+  }
 }
 
 static void setup_cmd() {
