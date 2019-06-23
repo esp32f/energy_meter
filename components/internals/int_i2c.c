@@ -1,6 +1,6 @@
 #include <stdint.h>
 #include <sdkconfig.h>
-#include "main_i2c.h"
+#include "int_i2c.h"
 
 
 #ifndef ACK_CHECK_DIS

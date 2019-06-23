@@ -1,4 +1,4 @@
-#include "main_sht21.h"
+#include "ext_sht21.h"
 
 
 

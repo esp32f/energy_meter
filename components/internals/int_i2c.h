@@ -1,4 +1,5 @@
 #pragma once
+#include <driver/gpio.h>
 #include <driver/i2c.h>
 
 

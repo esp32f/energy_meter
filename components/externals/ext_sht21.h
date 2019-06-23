@@ -1,5 +1,5 @@
 #pragma once
-#include "main_i2c.h"
+#include "int_i2c.h"
 
 
 // I2C slave address
