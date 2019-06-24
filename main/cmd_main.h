@@ -16,6 +16,7 @@ extern "C" {
 #include "cmd_system.h"
 #include "cmd_wifi.h"
 #include "cmd_nvs.h"
+#include "int_uart.h"
 
 
 #ifndef CONFIG_ESP_CONSOLE_UART_NUM
@@ -47,30 +48,13 @@ static void setup_fs() {
 }
 #endif // CONFIG_STORE_HISTORY
 
-
-static void setup_uart() {
-  // Configure UART. Note that REF_TICK is used so that the baud rate remains
-  // correct while APB frequency is changing in light sleep mode.
-  const uart_port_t port = (uart_port_t) CONFIG_ESP_CONSOLE_UART_NUM;
-  const uart_config_t config = {
-    .baud_rate = CONFIG_ESP_CONSOLE_UART_BAUDRATE,
-    .data_bits = UART_DATA_8_BITS,
-    .parity = UART_PARITY_DISABLE,
-    .stop_bits = UART_STOP_BITS_1,
-    .use_ref_tick = true
-  };
-  ESP_ERROR_CHECK( uart_param_config(port, &config) );
-  // Install UART driver for interrupt-driven reads and writes
-  ESP_ERROR_CHECK( uart_driver_install(port, 256, 0, 0, NULL, 0) );
-}
-
 static void setup_vfs() {
   // Minicom, screen, idf_monitor send CR when ENTER key is pressed
   esp_vfs_dev_uart_set_rx_line_endings(ESP_LINE_ENDINGS_CR);
   // Move the caret to the beginning of the next line on '\n'
   esp_vfs_dev_uart_set_tx_line_endings(ESP_LINE_ENDINGS_CRLF);
   // Tell VFS to use UART driver
-  setup_uart();
+  uart_init(CONFIG_ESP_CONSOLE_UART_NUM, CONFIG_ESP_CONSOLE_UART_BAUDRATE);
   esp_vfs_dev_uart_use_driver(CONFIG_ESP_CONSOLE_UART_NUM);
 }
 
