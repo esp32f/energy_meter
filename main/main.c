@@ -2,13 +2,6 @@
 #include <string.h>
 #include "esp_system.h"
 #include "esp_log.h"
-#include "esp_console.h"
-#include "esp_vfs_dev.h"
-#include "driver/uart.h"
-#include "linenoise/linenoise.h"
-#include "argtable3/argtable3.h"
-#include "cmd_main.h"
-#include "esp_vfs_fat.h"
 #include "nvs.h"
 #include "nvs_flash.h"
 #include "int_nvs.h"
@@ -22,7 +15,8 @@ void app_main() {
   tcpip_adapter_init();
   ERET( esp_event_loop_create_default() );
   ERET( nvs_init() );
-  setup_cmd();
+  return;
+  // setup_cmd();
 
   // Prompt to be printed before each line.
   // This can be customized, made dynamic, etc.

@@ -1,14 +1,14 @@
-#include "esp_log.h"
-#include "esp_system.h"
-#include "esp_console.h"
-#include "esp_vfs_dev.h"
-#include "linenoise/linenoise.h"
+#include <esp_log.h>
+#include <esp_system.h>
+#include <esp_console.h>
+#include <esp_vfs_dev.h>
+#include <linenoise/linenoise.h>
 #include "cmd_system.h"
 #include "cmd_wifi.h"
 #include "int_uart.h"
 #include "int_fatfs.h"
 #include "macros.h"
-#include "console.h"
+#include "main_console.h"
 
 
 #ifndef CONFIG_ESP_CONSOLE_UART_NUM
