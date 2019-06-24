@@ -18,9 +18,6 @@ extern "C" {
 #include "cmd_nvs.h"
 
 
-#ifndef TAG
-#define TAG "energy"
-#endif
 #ifndef CONFIG_ESP_CONSOLE_UART_NUM
 #define CONFIG_ESP_CONSOLE_UART_NUM 0
 #endif

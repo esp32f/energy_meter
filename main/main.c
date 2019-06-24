@@ -11,26 +11,17 @@
 #include "esp_vfs_fat.h"
 #include "nvs.h"
 #include "nvs_flash.h"
+#include "int_nvs.h"
+#include "macros.h"
 
 
-#ifndef TAG
-#define TAG "energy"
-#endif
-
-
-static void setup_nvs() {
-  esp_err_t err = nvs_flash_init();
-  if (err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-    ESP_ERROR_CHECK( nvs_flash_erase() );
-    err = nvs_flash_init();
-  }
-  ESP_ERROR_CHECK(err);
-}
-
+static const char *TAG = "esp32";
 
 
 void app_main() {
-  setup_nvs();
+  tcpip_adapter_init();
+  ERET( esp_event_loop_create_default() );
+  ERET( nvs_init() );
   setup_cmd();
 
   // Prompt to be printed before each line.

@@ -31,8 +31,6 @@ static void on_ip(void *arg, esp_event_base_t base, int32_t id, void* data) {
 
 
 esp_err_t wifi_init(uint8_t *ssid, uint8_t *pass) {
-  tcpip_adapter_init();
-  ERET( esp_event_loop_create_default() );
   wifi_init_config_t iconfig = WIFI_INIT_CONFIG_DEFAULT();
   ERET( esp_wifi_init(&iconfig) );
   ERET( esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID, &on_wifi, NULL) );
