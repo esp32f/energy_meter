@@ -53,99 +53,78 @@ void register_system()
 #endif
 }
 
-/* 'version' command */
-static int get_version(int argc, char **argv)
-{
-    esp_chip_info_t info;
-    esp_chip_info(&info);
-    printf("IDF Version:%s\r\n", esp_get_idf_version());
-    printf("Chip info:\r\n");
-    printf("\tmodel:%s\r\n", info.model == CHIP_ESP32 ? "ESP32" : "Unknow");
-    printf("\tcores:%d\r\n", info.cores);
-    printf("\tfeature:%s%s%s%s%d%s\r\n",
-           info.features & CHIP_FEATURE_WIFI_BGN ? "/802.11bgn" : "",
-           info.features & CHIP_FEATURE_BLE ? "/BLE" : "",
-           info.features & CHIP_FEATURE_BT ? "/BT" : "",
-           info.features & CHIP_FEATURE_EMB_FLASH ? "/Embedded-Flash:" : "/External-Flash:",
-           spi_flash_get_chip_size() / (1024 * 1024), " MB");
-    printf("\trevision number:%d\r\n", info.revision);
-    return 0;
+
+static int cmd_version(int argc, char **argv) {
+  esp_chip_info_t info;
+  esp_chip_info(&info);
+  uint8_t mac[6];
+  esp_efuse_mac_get_default(mac);
+  printf("%s%s%s%s, %d cores, %d MB %s flash\r\n",
+    info.model == CHIP_ESP32? "ESP32":"?",
+    info.features & CHIP_FEATURE_WIFI_BGN? "/802.11bgn":"",
+    info.features & CHIP_FEATURE_BT? "/BT":"",
+    info.features & CHIP_FEATURE_BLE? "/BLE":"",
+    info.cores, spi_flash_get_chip_size() / (1024 * 1024),
+    info.features & CHIP_FEATURE_EMB_FLASH ? "embedded":"external"
+  );
+  printf("MAC: %02X:%02X:%02X:%02X:%02X:%02X\n",
+    mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]
+  );
+  printf("Revision: %d, IDF: %s\r\n", info.revision, esp_get_idf_version());
+  return 0;
 }
 
-static void register_version()
-{
-    const esp_console_cmd_t cmd = {
-        .command = "version",
-        .help = "Get version of chip and SDK",
-        .hint = NULL,
-        .func = &get_version,
-    };
-    ESP_ERROR_CHECK( esp_console_cmd_register(&cmd) );
+
+static esp_err_t register_version() {
+  const esp_console_cmd_t cmd = {
+    .command = "version",
+    .help = "Get version of Chip and SDK",
+    .hint = NULL,
+    .func = &cmd_version,
+  };
+  return esp_console_cmd_register(&cmd);
 }
 
-/** 'restart' command restarts the program */
 
-static int restart(int argc, char **argv)
-{
-    ESP_LOGI(TAG, "Restarting");
-    esp_restart();
+static int cmd_restart(int argc, char **argv) {
+  ESP_LOGI(TAG, "Restarting ...");
+  esp_restart();
 }
 
-static void register_restart()
-{
-    const esp_console_cmd_t cmd = {
-        .command = "restart",
-        .help = "Software reset of the chip",
-        .hint = NULL,
-        .func = &restart,
-    };
-    ESP_ERROR_CHECK( esp_console_cmd_register(&cmd) );
+
+static esp_err_t register_restart() {
+  const esp_console_cmd_t cmd = {
+    .command = "restart",
+    .help = "Software reset of the chip",
+    .hint = NULL,
+    .func = &cmd_restart,
+  };
+  return esp_console_cmd_register(&cmd);
 }
 
-/** 'free' command prints available heap memory */
 
-static int free_mem(int argc, char **argv)
-{
-    printf("%d\n", esp_get_free_heap_size());
-    return 0;
+static int cmd_heap(int argc, char **argv) {
+  printf("Heap: %dK free of %dK\r\n",
+    esp_get_free_heap_size() / 1024,
+    heap_caps_get_minimum_free_size(MALLOC_CAP_DEFAULT) / 1024
+  );
+  return 0;
 }
 
-static void register_free()
-{
-    const esp_console_cmd_t cmd = {
-        .command = "free",
-        .help = "Get the current size of free heap memory",
-        .hint = NULL,
-        .func = &free_mem,
-    };
-    ESP_ERROR_CHECK( esp_console_cmd_register(&cmd) );
+
+static esp_err_t register_heap() {
+  const esp_console_cmd_t cmd = {
+    .command = "heap",
+    .help = "Get heap memory status",
+    .hint = NULL,
+    .func = &cmd_heap,
+  };
+  return esp_console_cmd_register(&cmd_heap);
 }
 
-/* 'heap' command prints minumum heap size */
-static int heap_size(int argc, char **argv)
-{
-    uint32_t heap_size = heap_caps_get_minimum_free_size(MALLOC_CAP_DEFAULT);
-    ESP_LOGI(TAG, "min heap size: %u", heap_size);
-    return 0;
-}
 
-static void register_heap()
-{
-    const esp_console_cmd_t heap_cmd = {
-        .command = "heap",
-        .help = "Get minimum size of free heap memory that was available during program execution",
-        .hint = NULL,
-        .func = &heap_size,
-    };
-    ESP_ERROR_CHECK( esp_console_cmd_register(&heap_cmd) );
-
-}
-
-/** 'tasks' command prints the list of tasks and related information */
 #if WITH_TASKS_INFO
-
-static int tasks_info(int argc, char **argv)
-{
+static int cmd_tasks(int argc, char **argv) {
     const size_t bytes_per_task = 40; /* see vTaskList description */
     char *task_list_buffer = malloc(uxTaskGetNumberOfTasks() * bytes_per_task);
     if (task_list_buffer == NULL) {
@@ -163,17 +142,15 @@ static int tasks_info(int argc, char **argv)
     return 0;
 }
 
-static void register_tasks()
-{
-    const esp_console_cmd_t cmd = {
-        .command = "tasks",
-        .help = "Get information about running tasks",
-        .hint = NULL,
-        .func = &tasks_info,
-    };
-    ESP_ERROR_CHECK( esp_console_cmd_register(&cmd) );
+static esp_err_t register_tasks() {
+  const esp_console_cmd_t cmd = {
+    .command = "tasks",
+    .help = "Get information about running tasks",
+    .hint = NULL,
+    .func = &cmd_tasks,
+  };
+  return esp_console_cmd_register(&cmd);
 }
-
 #endif // WITH_TASKS_INFO
 
 /** 'deep_sleep' command puts the chip into deep sleep mode */
