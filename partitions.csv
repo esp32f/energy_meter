@@ -6,5 +6,5 @@ spiffs,   data, spiffs,  ,        0xF0000,
 fat,      data, fat,     ,        1M, 
 
 
-# Note: if you change the phy_init or app partition offset,
+# NOTE: if you change the phy_init or app partition offset,
 # make sure to change the offset in Kconfig.projbuild
