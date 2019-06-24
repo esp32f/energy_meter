@@ -6,6 +6,6 @@ set(COMPONENT_SRCS
   "int_spi.c"
 )
 
-set(COMPONENT_REQUIRES console)
+set(COMPONENT_REQUIRES esp32)
 
 register_component()
