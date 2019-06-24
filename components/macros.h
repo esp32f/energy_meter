@@ -1,6 +1,7 @@
 #pragma once
 
 
+// Functions
 #define ERET(cmd) \
   do { \
     esp_err_t ret = cmd; \

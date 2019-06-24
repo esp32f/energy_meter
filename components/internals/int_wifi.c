@@ -8,8 +8,7 @@
 #include "macros.h"
 
 
-#define TAG_OLD TAG
-#define TAG "wifi"
+static const char *TAG = "wifi";
 
 
 static void on_wifi(void *arg, esp_event_base_t base, int32_t id, void *data) {
@@ -50,6 +49,3 @@ esp_err_t wifi_init(uint8_t *ssid, uint8_t *pass) {
   ERET( esp_wifi_set_config(ESP_IF_WIFI_STA, &config) );
   return esp_wifi_start();
 }
-
-
-#define TAG TAG_OLD
