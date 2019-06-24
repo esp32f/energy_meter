@@ -1,22 +1,14 @@
-// Declarations of command registration functions.
-#pragma once
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#include "esp_system.h"
 #include "esp_log.h"
+#include "esp_system.h"
 #include "esp_console.h"
 #include "esp_vfs_dev.h"
-#include "esp_vfs_fat.h"
-#include "driver/uart.h"
 #include "linenoise/linenoise.h"
-#include "argtable3/argtable3.h"
-
 #include "cmd_system.h"
 #include "cmd_wifi.h"
-#include "cmd_nvs.h"
 #include "int_uart.h"
+#include "int_fatfs.h"
+#include "macros.h"
+#include "console.h"
 
 
 #ifndef CONFIG_ESP_CONSOLE_UART_NUM
@@ -33,32 +25,22 @@ extern "C" {
 // wear_levelling library.
 #define MOUNT_PATH    "/data"
 #define HISTORY_PATH  MOUNT_PATH "/history.txt"
-
-static void setup_fs() {
-  static wl_handle_t handle;
-  const esp_vfs_fat_mount_config_t config = {
-    .max_files = 4,
-    .format_if_mount_failed = true
-  };
-  esp_err_t err = esp_vfs_fat_spiflash_mount(MOUNT_PATH, "storage", &config, &handle);
-  if (err != ESP_OK) {
-    ESP_LOGE(TAG, "Failed to mount FATFS (%s)", esp_err_to_name(err));
-    return;
-  }
-}
 #endif // CONFIG_STORE_HISTORY
 
-static void setup_vfs() {
+
+static esp_err_t init_vfs(uart_port_t port, int baud_rate) {
   // Minicom, screen, idf_monitor send CR when ENTER key is pressed
   esp_vfs_dev_uart_set_rx_line_endings(ESP_LINE_ENDINGS_CR);
   // Move the caret to the beginning of the next line on '\n'
   esp_vfs_dev_uart_set_tx_line_endings(ESP_LINE_ENDINGS_CRLF);
   // Tell VFS to use UART driver
-  uart_init(CONFIG_ESP_CONSOLE_UART_NUM, CONFIG_ESP_CONSOLE_UART_BAUDRATE);
-  esp_vfs_dev_uart_use_driver(CONFIG_ESP_CONSOLE_UART_NUM);
+  ERET( uart_init(port, baud_rate) );
+  esp_vfs_dev_uart_use_driver(port);
+  return ESP_OK;
 }
 
-static void setup_console() {
+
+static esp_err_t init_console() {
   // Initialize the console
   esp_console_config_t config = {
     .max_cmdline_args = 8,
@@ -67,10 +49,11 @@ static void setup_console() {
     .hint_color = atoi(LOG_COLOR_CYAN)
 #endif
   };
-  ESP_ERROR_CHECK( esp_console_init(&config) );
+  return esp_console_init(&config);
 }
 
-static void setup_linenoise() {
+
+static void init_linenoise() {
   // Configure linenoise line completion library
   // Enable multiline editing. If not set, long commands will scroll within single line.
   linenoiseSetMultiLine(1);
@@ -78,7 +61,7 @@ static void setup_linenoise() {
   linenoiseSetCompletionCallback(&esp_console_get_completion);
   linenoiseSetHintsCallback((linenoiseHintsCallback*) &esp_console_get_hint);
   // Set command history size
-  linenoiseHistorySetMaxLen(100);
+  linenoiseHistorySetMaxLen(64);
 #if CONFIG_STORE_HISTORY
   // Load command history from filesystem
   linenoiseHistoryLoad(HISTORY_PATH);
@@ -94,24 +77,19 @@ static void setup_linenoise() {
   }
 }
 
-static void setup_cmd() {
+esp_err_t console_init() {
   // Disable buffering on stdin
   setvbuf(stdin, NULL, _IONBF, 0);
-  // Setup tools
+  // Initialize parts
 #if CONFIG_STORE_HISTORY
-  setup_fs();
+  ERET( fatfs_init(MOUNT_PATH, "storage") );
 #endif
-  setup_vfs();
-  setup_console();
-  setup_linenoise();
+  ERET( init_vfs(CONFIG_ESP_CONSOLE_UART_NUM, CONFIG_ESP_CONSOLE_UART_BAUDRATE) );
+  ERET( init_console() );
+  init_linenoise();
   // Register commands
-  esp_console_register_help_command();
+  ERET( esp_console_register_help_command() );
   register_system();
   register_wifi();
   register_nvs();
 }
-
-
-#ifdef __cplusplus
-}
-#endif
