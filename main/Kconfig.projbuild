@@ -1,0 +1,20 @@
+menu "Application configuration"
+
+    config WIFI_AP_SSID
+        string "WiFi access point SSID"
+        default "energy_meter#%s"
+        help
+            Each device creates an access point, which is used to configure it at
+            IP 192.168.4.1. The SSID name is defined here, which can be made unique
+            by including MAC id of the device using '%s', e.g. energy_meter#%s =>
+            energy_meter#1e2e3e4e5e6e.
+
+    config WIFI_AP_PASSWORD
+        string "WiFi access point password"
+        default "admin#%s"
+        help
+            The access point password is defined here, which case be made unique
+            by including MAC id of the device using '%s', e.g. admin#%s =>
+            admin#1e2e3e4e5e6e.
+
+endmenu
