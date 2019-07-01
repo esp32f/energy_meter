@@ -13,6 +13,9 @@
 #include "macros.h"
 
 
+#define MAX_JSON_SIZE 256
+
+
 static char[32] mac;
 static i2c_port_t i2c = CONFIG_I2C_MASTER_PORT;
 static httpd_handle_t httpd = NULL;
@@ -184,9 +187,9 @@ void app_main() {
   esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, on_ip, NULL);
   ERETV( esp_wifi_set_mode(WIFI_MODE_APSTA) );
   ERETV( esp_wifi_start() );
+  TickType_t tpub = xTaskGetTickCount();
   while (true) {
-    printf("- Waiting %d ms ...\n", mqtt_interval());
-    vTaskDelay(mqtt_interval() / portTICK_RATE_MS);
+    vTaskDelayUntil(& tpub, mqtt_interval() / portTICK_RATE_MS);
     if (!wifi_connected) {
       ERETV( esp_wifi_connect() );
       continue;
@@ -194,9 +197,9 @@ void app_main() {
       ERETV( esp_mqtt_client_reconnect(mqtt) );
       continue;
     }
-    char json[256];
+    char json[MAX_JSON_SIZE];
     ERETV( sht21_json(i2c, json) );
-    printf("- Send to MQTT broker\n");
+    printf("# Send to MQTT broker\n");
     printf(": topic=%s, json=%s\n", "/charmender", json);
     esp_mqtt_client_publish(mqtt, "/charmender", json, strlen(json)+1, 0, 0);
   }
