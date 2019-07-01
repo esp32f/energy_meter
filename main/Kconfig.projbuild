@@ -1,35 +1,35 @@
 menu "Application configuration"
 
-    config WIFI_AP_SSID
-        string "WiFi access point SSID"
-        default "energy_meter#%s"
-        help
-            Each device creates an access point, which is used to configure it at
-            IP 192.168.4.1. The Sdefault SID name is defined here, which can be made
-            unique by including MAC id of the device using '%s', e.g. energy_meter#%s
-            => energy_meter#1e2e3e4e5e6e.
+  config WIFI_AP_SSID
+    string "WiFi access point SSID"
+    default "energy_meter#%s"
+    help
+      Each device creates an access point, which is used to configure it at
+      IP 192.168.4.1. The Sdefault SID name is defined here, which can be made
+      unique by including MAC id of the device using '%s', e.g. energy_meter#%s
+      => energy_meter#1e2e3e4e5e6e.
 
-    config WIFI_AP_PASSWORD
-        string "WiFi access point password"
-        default "admin#%s"
-        help
-            The default access point password is defined here, which case be made
-            unique by including MAC id of the device using '%s', e.g. admin#%s
-            => admin#1e2e3e4e5e6e.
+  config WIFI_AP_PASSWORD
+    string "WiFi access point password"
+    default "admin#%s"
+    help
+      The default access point password is defined here, which case be made
+      unique by including MAC id of the device using '%s', e.g. admin#%s
+      => admin#1e2e3e4e5e6e.
 
-    config WIFI_STA_SSID
-        string "WiFi station target SSID"
-        default "energy_meter"
-        help
-            Each device connects to an access point, which is used to communicate
-            measurements and other related information through the internet. The
-            default SSID name is defined here.
+  config WIFI_STA_SSID
+    string "WiFi station target SSID"
+    default "energy_meter"
+    help
+      Each device connects to an access point, which is used to communicate
+      measurements and other related information through the internet. The
+      default SSID name is defined here.
 
-    config WIFI_STA_PASSWORD
-        string "WiFi station target password"
-        default "energy_meter"
-        help
-            The default password of the access point this device connects to is
-            defined here.
+  config WIFI_STA_PASSWORD
+    string "WiFi station target password"
+    default "energy_meter"
+    help
+      The default password of the access point this device connects to is
+      defined here.
 
 endmenu
