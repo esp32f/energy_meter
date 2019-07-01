@@ -23,7 +23,8 @@ static bool wifi_connected = false;
 
 static esp_err_t deinit() {
   printf("- Deinit all\n");
-  ERET( mqtt_deinit(mqtt) );
+  ERET( esp_mqtt_client_stop(mqtt) );
+  ERET( esp_mqtt_client_destroy(mqtt) );
   ERET( httpd_stop(httpd) );
   ERET( esp_wifi_deinit() );
   ERET( esp_vfs_spiffs_unregister(NULL) );
