@@ -31,7 +31,7 @@ esp_err_t httpd_resp_send_file(httpd_req_t *req, const char *path) {
   ERET( httpd_resp_set_type(req, type) );
   FILE *f = fopen(path, "r");
   if (f == NULL) {
-    printf("Cannot open file %s!\n", path);
+    printf("* Cannot open file %s!\n", path);
     return ESP_FAIL;
   }
   char buff[FILE_BUFFER_SIZE];
@@ -59,7 +59,7 @@ esp_err_t httpd_on(httpd_handle_t handle, const char *uri, httpd_method_t method
 
 
 esp_err_t httpd_on_static(httpd_req_t *req) {
-  printf("- On HTTPD Static: uri=%s\n", req->uri);
+  printf("@ HTTPD Static: uri=%s\n", req->uri);
   const char *index = strcmp(req->uri, "/") == 0? "index.html" : "";
   char path[FILE_PATH_MAX];
   sprintf(path, "/spiffs%s%s", req->uri, index);
@@ -68,8 +68,8 @@ esp_err_t httpd_on_static(httpd_req_t *req) {
 
 
 esp_err_t httpd_init(httpd_handle_t *handle) {
-  printf("- Init HTTP server\n");
-  httpd_config_t config = HTTPD_DEFAULT_CONFIG();
-  config.uri_match_fn = httpd_uri_match_wildcard;
-  return httpd_start(handle, &config);
+  printf("# Init HTTP server\n");
+  httpd_config_t c = HTTPD_DEFAULT_CONFIG();
+  c.uri_match_fn = httpd_uri_match_wildcard;
+  return httpd_start(handle, &c);
 }
