@@ -1,0 +1,65 @@
+/* HEADER */
+/* ------ */
+#header /* , #header * */ {
+  /* remove border */
+  border: none;
+}
+#header label {
+  /* use full width */
+  max-width: none;
+}
+header > a, #header ul a {
+  /* use righteous (b) */
+  font-family: 'Righteous', cursive;
+  font-weight: bolder;
+}
+
+
+/* FOOTER */
+/* ------ */
+html {
+  /* full height html */
+  height: 100%;
+}
+body {
+  /* full height body */
+  position: relative;
+  min-height: 100%;
+}
+footer {
+  /* dont overflow */
+  overflow: hidden;
+  max-width: none;
+}
+footer a:not([class]):hover {
+  color: yellow;
+}
+footer .end a {
+  padding: 0 1rem;
+}
+@media (max-width: 50rem) { footer .end div[txt=r] {
+  /* no splitting */
+  text-align: left;
+}}
+
+
+/* MAIN */
+/* ---- */
+body, input, textarea, select, button {
+  /* use righteous */
+  font-family: 'Righteous', cursive;
+}
+h2 {
+  /* good heading margin */
+  margin: 10rem 0 4rem 0;
+}
+p, p:not([class]) {
+  /* justify paragraph text */
+  text-align: justify;
+}
+html.wide section, html.wide form {
+  /* wide page */
+  max-width: none;
+  padding-top: 0;
+  margin: 0;
+}
