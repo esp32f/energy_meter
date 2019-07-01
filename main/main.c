@@ -167,6 +167,9 @@ static void on_ip(void *arg, esp_event_base_t base, int32_t id, void *data) {
 
 
 void app_main() {
+  char buff[32];
+  ERETV( device_mac("energy_meter#", buff) );
+  printf("- ID: %s\n", buff);
   tcpip_adapter_init();
   ERETV( esp_event_loop_create_default() );
   ERETV( i2c_init(i2c, GPIO_NUM_18, GPIO_NUM_19, 100000) );

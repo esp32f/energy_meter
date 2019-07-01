@@ -6,6 +6,14 @@
 #include "macros.h"
 
 
+esp_err_t device_mac(const char *prefix, char *buff) {
+  uint8_t mac[6];
+  ERET( esp_efuse_mac_get_default(mac) );
+  sprintf(buff, "%s" MACSTR, prefix, MAC2STR(mac));
+  return ESP_OK;
+}
+
+
 esp_err_t i2c_init(i2c_port_t port, gpio_num_t sda, gpio_num_t scl, uint32_t clk_speed) {
   printf("- Init I2C %d\n", port);
   printf(": sda=%d, scl=%d, clk_speed=%d\n", sda, scl, clk_speed);
