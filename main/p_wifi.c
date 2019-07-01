@@ -40,40 +40,6 @@ void wifi_on_sta(void *arg, esp_event_base_t base, int32_t id, void *data) {
 }
 
 
-esp_err_t wifi_start_apsta() {
-  printf("- Start WiFi as AP+station\n");
-  printf(": ssid=%s, password=%s\n", WIFI_AP_SSID, WIFI_AP_PASSWORD);
-  ERET( esp_wifi_set_mode(WIFI_MODE_APSTA) );
-  wifi_config_t c = {.ap = {
-    .ssid = WIFI_AP_SSID,
-    .password = WIFI_AP_PASSWORD,
-    .ssid_len = 0,
-    .channel = 0,
-    .authmode = WIFI_AUTH_WPA_PSK,
-    .ssid_hidden = 0,
-    .max_connection = 4,
-    .beacon_interval = 100,
-  }};
-  ERET( esp_wifi_set_config(ESP_IF_WIFI_AP, &c) );
-  ERET( esp_wifi_start() );
-  return ESP_OK;
-}
-
-
-#if 0
-esp_err_t wifi_start_sta() {
-  printf("- Start WiFi as station\n");
-  ERET( esp_wifi_set_mode(WIFI_MODE_STA) );
-  wifi_config_t c;
-  ERET( esp_wifi_get_config(WIFI_IF_STA, &c) );
-  printf(": ssid=%s, password=%s\n", c.sta.ssid, c.sta.password);
-  ERET( esp_wifi_start() );
-  ERET( esp_wifi_connect() );
-  return ESP_OK;
-}
-#endif
-
-
 esp_err_t wifi_init(const char *mac) {
   printf("# Init WiFi\n");
   wifi_config_t c;
@@ -81,6 +47,7 @@ esp_err_t wifi_init(const char *mac) {
   if (strlen(c.ap.ssid) == 0) {
     sprintf(c.ap.ssid, CONFIG_WIFI_AP_SSID, mac);
     sprintf(c.ap.password, CONFIG_WIFI_AP_PASSWORD, mac);
+    c.ap.authmode = WIFI_AUTH_WPA_PSK;
     ERET( esp_wifi_set_config(WIFI_IF_AP, &c) );
   }
   printf(": WiFi AP: ssid=%s, password=%s\n", c.ap.ssid, c.ap.password);
