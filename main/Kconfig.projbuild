@@ -32,4 +32,18 @@ menu "Application configuration"
       The default password of the access point this device connects to is
       defined here.
 
+
+  config MQTT_BROKER_URL
+    string "MQTT broker URL"
+    default "mqtt://test.mosquitto.org:1883"
+    help
+      The default MQTT broker URL to which this device connects as a client.
+      The device publishes all its data there.
+
+  config MQTT_PUBLISH_INTERVAL
+    int "MQTT publish interval"
+    default 10000
+    help
+      The default MQTT publish interval for measurements.
+
 endmenu
