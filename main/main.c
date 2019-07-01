@@ -13,6 +13,7 @@
 #include "macros.h"
 
 
+static char[32] mac;
 static i2c_port_t i2c = CONFIG_I2C_MASTER_PORT;
 static httpd_handle_t httpd = NULL;
 static esp_mqtt_client_handle_t mqtt = NULL;
@@ -171,18 +172,18 @@ static void on_ip(void *arg, esp_event_base_t base, int32_t id, void *data) {
 
 
 void app_main() {
-  char buff[32];
-  ERETV( device_mac("energy_meter#", buff) );
-  printf("- ID: %s\n", buff);
-  tcpip_adapter_init();
-  ERETV( esp_event_loop_create_default() );
-  ERETV( i2c_init(i2c, GPIO_NUM_18, GPIO_NUM_19, 100000) );
+  chip_print_info();
   ERETV( nvs_init() );
   ERETV( spiffs_init() );
-  ERETV( wifi_init() );
+  ERETV( i2c_init(i2c, CONFIG_I2C_MASTER_SDA, CONFIG_I2C_MASTER_SCL, CONFIG_I2C_MASTER_CLK_SPEED) );
+  tcpip_adapter_init();
+  ERETV( esp_event_loop_create_default() );
+  ERETV( efuse_get_mac_string(mac) );
+  ERETV( wifi_init(mac) );
   esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID, on_wifi, NULL);
   esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, on_ip, NULL);
-  ERETV( wifi_start_apsta() );
+  ERETV( esp_wifi_set_mode(WIFI_MODE_APSTA) );
+  ERETV( esp_wifi_start() );
   while (true) {
     printf("- Waiting %d ms ...\n", mqtt_interval());
     vTaskDelay(mqtt_interval() / portTICK_RATE_MS);
