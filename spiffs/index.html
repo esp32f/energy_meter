@@ -21,8 +21,16 @@
   <input type="checkbox">
   <header><a href="#"><img src="favicon.png"> ENERGY_METER</a></header>
   <ul>
-    <li><a href="#wifi">WiFi</a></li>
-    <li><a href="#mqtt">MQTT</a></li>
+    <li><a href="#menu_a">Menu A</a></li>
+    <li><a href="#menu_b">Menu B</a></li>
+    <li>
+    <a>Configuration</a>
+    <menu>
+      <menuitem><a href="#">WiFi access point</a></menuitem>
+      <menuitem><a href="#">WiFi station</a></menuitem>
+      <menuitem><a href="#">MQTT communication</a></menuitem>
+    </menu>
+    </li>
   </ul>
 </label>
 </nav>
@@ -38,29 +46,34 @@
 </section>
 
 
-<section id="wifi">
+<section id="config_wifi_ap">
 <form>
-<grid>
-<div col="1/2">
-  <label>WiFi network</label>
-  <input type="text" placeholder="e.g. mywifi" id="ssid">
-</div>
-<div col="1/2">
-  <label>WiFi password</label>
-  <input type="text" placeholder="e.g. 12345678" id="password">
-</div>
-</grid>
+<label>WiFi access point SSID</label>
+<input type="text" placeholder="e.g. energy_meter#1e2e3e4e5e6e" id="wifi_ap_ssid">
+<label>WiFi access point password</label>
+<input type="text" placeholder="e.g. admin#1e2e3e4e5e6e" id="wifi_ap_password">
 <input type="submit" value="Save">
 </form>
 </section>
 
 
-<section id="mqtt">
+<section id="config_wifi_sta">
+<form>
+<label>WiFi station target SSID</label>
+<input type="text" placeholder="e.g. energy_meter" id="wifi_sta_ssid">
+<label>WiFi station target password</label>
+<input type="text" placeholder="e.g. energy_meter" id="wifi_sta_password">
+<input type="submit" value="Save">
+</form>
+</section>
+
+
+<section id="config_mqtt">
 <form>
 <label>MQTT broker URL</label>
-<input type="text" placeholder="e.g. http://mqttbroker.herokuapp.com" id="uri">
-<label>MQTT update interval</label>
-<input type="text" placeholder="e.g. 10000" id="interval">
+<input type="text" placeholder="e.g. http://mqttbroker.herokuapp.com" id="mqtt_broker_url">
+<label>MQTT publish interval</label>
+<input type="text" placeholder="e.g. 10000" id="mqtt_publish_interval">
 <input type="submit" value="Save">
 </form>
 </section>
@@ -71,6 +84,7 @@
 <input type="submit" value="Restart">
 </form>
 </section>
+
 </main>
 </body>
 </html>
