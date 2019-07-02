@@ -21,6 +21,7 @@ static bool mqtt_connected = false;
 static bool wifi_connected = false;
 
 
+#if 0
 static esp_err_t deinit() {
   printf("- Deinit all\n");
   ERET( mqtt_deinit(mqtt) );
@@ -31,6 +32,7 @@ static esp_err_t deinit() {
   ERET( i2c_driver_delete(i2c) );
   return ESP_OK;
 }
+#endif
 
 
 static esp_err_t on_sht21(httpd_req_t *req) {
@@ -90,7 +92,7 @@ static esp_err_t on_restart(httpd_req_t *req) {
 
 void on_mqtt(void *arg, esp_event_base_t base, int32_t id, void *data) {
   esp_mqtt_event_handle_t d = (esp_mqtt_event_handle_t) data;
-  esp_mqtt_client_handle_t h = d->client;
+  // esp_mqtt_client_handle_t h = d->client;
   switch(d->event_id) {
     case MQTT_EVENT_CONNECTED:
     printf("@ Connected to MQTT broker\n");
@@ -178,7 +180,8 @@ void app_main() {
   ERETV( wifi_init(buff) );
   esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID, on_wifi, NULL);
   esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, on_ip, NULL);
-  ERETV( wifi_start_apsta() );
+  ERETV( esp_wifi_set_mode(WIFI_MODE_APSTA) );
+  ERETV( esp_wifi_start() );
   while (true) {
     printf("- Waiting %d ms ...\n", mqtt_interval());
     vTaskDelay(mqtt_interval() / portTICK_RATE_MS);
