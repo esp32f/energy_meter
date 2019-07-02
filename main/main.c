@@ -203,7 +203,7 @@ void app_main() {
     char json[256];
     ERETV( sht21_json(i2c, json) );
     printf("# Send to MQTT broker\n");
-    printf(": topic=%s, json=%s\n", "/charmender", json);
-    esp_mqtt_client_publish(mqtt, "/charmender", json, strlen(json)+1, 0, 0);
+    printf(": topic=%s, json=%s\n", CONFIG_MQTT_PUBLISH_TOPIC, json);
+    esp_mqtt_client_publish(mqtt, CONFIG_MQTT_PUBLISH_TOPIC, json, strlen(json)+1, 0, 0);
   }
 }
