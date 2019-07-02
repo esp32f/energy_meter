@@ -15,7 +15,7 @@ static uint32_t interval = 0;
 
 
 esp_err_t mqtt_get_config_json(char *buf) {
-  size_t length;
+  size_t length = sizeof(uri);
   NVS_OPEN(nvs);
   ERET( nvs_get_str(nvs, MQTT_BROKER_URL_KEY, uri, &length) );
   ERET( nvs_get_u32(nvs, MQTT_PUBLISH_INTERVAL_KEY, &interval) );
