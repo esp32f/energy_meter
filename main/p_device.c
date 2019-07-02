@@ -48,7 +48,7 @@ esp_err_t spiffs_init() {
   esp_vfs_spiffs_conf_t c = {
     .base_path = "/spiffs",
     .partition_label = NULL,
-    .max_files = 5,
+    .max_files = 16,
     .format_if_mount_failed = false,
   };
   ERET( esp_vfs_spiffs_register(&c) );
