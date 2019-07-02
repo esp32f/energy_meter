@@ -169,15 +169,15 @@ static void on_ip(void *arg, esp_event_base_t base, int32_t id, void *data) {
 
 
 void app_main() {
-  char buff[32];
-  ERETV( device_mac("energy_meter#", buff) );
-  printf("- ID: %s\n", buff);
+  char mac[32];
+  ERETV( efuse_get_mac_string(mac) );
+  printf("- ID: %s\n", mac);
   tcpip_adapter_init();
   ERETV( esp_event_loop_create_default() );
   ERETV( i2c_init(i2c, GPIO_NUM_18, GPIO_NUM_19, 100000) );
   ERETV( nvs_init() );
   ERETV( spiffs_init() );
-  ERETV( wifi_init(buff) );
+  ERETV( wifi_init(mac) );
   esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID, on_wifi, NULL);
   esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, on_ip, NULL);
   ERETV( esp_wifi_set_mode(WIFI_MODE_APSTA) );
