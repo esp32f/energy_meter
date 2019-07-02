@@ -10,7 +10,7 @@
 #define MQTT_PUBLISH_INTERVAL_KEY "mqtt_interval"
 
 
-static char uri[128];
+static char uri[128] = "";
 static uint32_t interval = 0;
 
 
@@ -43,12 +43,12 @@ esp_err_t mqtt_init(esp_mqtt_client_handle_t *handle) {
   printf("# Init MQTT client\n");
   size_t length = sizeof(uri);
   NVS_OPENW(nvs);
-  ERET( nvs_get_str(nvs, MQTT_BROKER_URL_KEY, uri, &length) );
+  nvs_get_str(nvs, MQTT_BROKER_URL_KEY, uri, &length);
   if (strlen(uri) == 0) {
     strcpy(uri, CONFIG_MQTT_BROKER_URL);
     ERET( nvs_set_str(nvs, MQTT_BROKER_URL_KEY, uri) );
   }
-  ERET( nvs_get_u32(nvs, MQTT_PUBLISH_INTERVAL_KEY, &interval) );
+  nvs_get_u32(nvs, MQTT_PUBLISH_INTERVAL_KEY, &interval);
   if (interval == 0) {
     interval = CONFIG_MQTT_PUBLISH_INTERVAL;
     ERET( nvs_set_u32(nvs, MQTT_PUBLISH_INTERVAL_KEY, interval) );
