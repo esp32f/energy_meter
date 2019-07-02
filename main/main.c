@@ -175,7 +175,7 @@ void app_main() {
   ERETV( i2c_init(i2c, GPIO_NUM_18, GPIO_NUM_19, 100000) );
   ERETV( nvs_init() );
   ERETV( spiffs_init() );
-  ERETV( wifi_init() );
+  ERETV( wifi_init(buff) );
   esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID, on_wifi, NULL);
   esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, on_ip, NULL);
   ERETV( wifi_start_apsta() );

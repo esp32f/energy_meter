@@ -76,21 +76,22 @@ esp_err_t wifi_start_sta() {
 
 esp_err_t wifi_init(const char *mac) {
   printf("# Init WiFi\n");
+  wifi_init_config_t ic = WIFI_INIT_CONFIG_DEFAULT();
+  ERET( esp_wifi_init(&ic) );
   wifi_config_t c;
   ERET( esp_wifi_get_config(WIFI_IF_AP, &c) );
-  if (strlen(c.ap.ssid) == 0) {
-    sprintf(c.ap.ssid, CONFIG_WIFI_AP_SSID, mac);
-    sprintf(c.ap.password, CONFIG_WIFI_AP_PASSWORD, mac);
+  if (strlen((char*) c.ap.ssid) == 0) {
+    sprintf((char*) c.ap.ssid, CONFIG_WIFI_AP_SSID, mac);
+    sprintf((char*) c.ap.password, CONFIG_WIFI_AP_PASSWORD, mac);
     ERET( esp_wifi_set_config(WIFI_IF_AP, &c) );
   }
   printf(": WiFi AP: ssid=%s, password=%s\n", c.ap.ssid, c.ap.password);
   ERET( esp_wifi_get_config(WIFI_IF_STA, &c) );
-  if (strlen(c.sta.ssid) == 0) {
-    sprintf(c.sta.ssid, CONFIG_WIFI_STA_SSID, mac);
-    sprintf(c.sta.password, CONFIG_WIFI_STA_PASSWORD, mac);
+  if (strlen((char*) c.sta.ssid) == 0) {
+    strcpy((char*) c.sta.ssid, CONFIG_WIFI_STA_SSID);
+    strcpy((char*) c.sta.password, CONFIG_WIFI_STA_PASSWORD);
     ERET( esp_wifi_set_config(WIFI_IF_STA, &c) );
   }
   printf(": WiFi STA: ssid=%s, password=%s\n", c.sta.ssid, c.sta.password);
-  wifi_init_config_t ic = WIFI_INIT_CONFIG_DEFAULT();
-  return esp_wifi_init(&ic);
+  return ESP_OK;
 }
