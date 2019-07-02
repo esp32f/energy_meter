@@ -24,7 +24,8 @@ static bool wifi_connected = false;
 #if 0
 static esp_err_t deinit() {
   printf("- Deinit all\n");
-  ERET( mqtt_deinit(mqtt) );
+  ERET( esp_mqtt_client_stop(mqtt) );
+  ERET( esp_mqtt_client_destroy(mqtt) );
   ERET( httpd_stop(httpd) );
   ERET( esp_wifi_deinit() );
   ERET( esp_vfs_spiffs_unregister(NULL) );
@@ -66,7 +67,7 @@ static esp_err_t on_wifi_set_config_sta(httpd_req_t *req) {
 
 static esp_err_t on_mqtt_config(httpd_req_t *req) {
   char json[256];
-  ERET( mqtt_config_json(json) );
+  ERET( mqtt_get_config_json(json) );
   printf("- MQTT get config: json=%s\n", json);
   ERET( httpd_resp_send_json(req, json) );
   return ESP_OK;
@@ -183,8 +184,10 @@ void app_main() {
   ERETV( esp_wifi_set_mode(WIFI_MODE_APSTA) );
   ERETV( esp_wifi_start() );
   while (true) {
-    printf("# Waiting %d ms ...\n", mqtt_interval());
-    vTaskDelay(mqtt_interval() / portTICK_RATE_MS);
+    uint32_t delay = mqtt_interval();
+    delay = delay? delay : 10000;
+    printf("# Waiting %d ms ...\n", delay);
+    vTaskDelay(delay / portTICK_RATE_MS);
     if (!wifi_connected) {
       ERETV( esp_wifi_connect() );
       continue;
