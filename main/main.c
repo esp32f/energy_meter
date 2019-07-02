@@ -175,6 +175,7 @@ static void on_ip(void *arg, esp_event_base_t base, int32_t id, void *data) {
 
 
 void app_main() {
+  char mac[32];
   chip_print_info();
   ERETV( nvs_init() );
   ERETV( spiffs_init() );
