@@ -16,7 +16,7 @@
 #define MAX_JSON_SIZE 256
 
 
-static char[32] mac;
+static char mac[32];
 static i2c_port_t i2c = CONFIG_I2C_MASTER_PORT;
 static httpd_handle_t httpd = NULL;
 static esp_mqtt_client_handle_t mqtt = NULL;
@@ -42,7 +42,7 @@ static esp_err_t deinit() {
 static esp_err_t on_sht21(httpd_req_t *req) {
   char json[MAX_JSON_SIZE];
   ERET( sht21_json(i2c, json) );
-  printf("@ SHT21: json=%s\n", json);
+  printf("- SHT21: json=%s\n", json);
   ERET( httpd_resp_send_json(req, json) );
   return ESP_OK;
 }
@@ -51,7 +51,7 @@ static esp_err_t on_sht21(httpd_req_t *req) {
 static esp_err_t on_wifi_get_config(httpd_req_t *req) {
   char json[MAX_JSON_SIZE];
   ERET( wifi_get_config_json(strstr(req->uri, "_ap")? WIFI_IF_AP : WIFI_IF_STA, json) );
-  printf("@ WiFi get config %s: json=%s\n", req->uri, json);
+  printf("- WiFi get config %s: json=%s\n", req->uri, json);
   ERET( httpd_resp_send_json(req, json) );
   return ESP_OK;
 }
@@ -62,7 +62,7 @@ static esp_err_t on_wifi_set_config(httpd_req_t *req) {
   httpd_req_recv(req, json, req->content_len);
   json[req->content_len] = '\0';
   ERET( wifi_set_config_json(strstr(req->uri, "_ap")? WIFI_IF_AP : WIFI_IF_STA, json) );
-  printf("@ WiFi set config %s: json=%s\n", req->uri, json);
+  printf("- WiFi set config %s: json=%s\n", req->uri, json);
   ERET( httpd_resp_send_json(req, "1") );
   return ESP_OK;
 }
@@ -71,7 +71,7 @@ static esp_err_t on_wifi_set_config(httpd_req_t *req) {
 static esp_err_t on_mqtt_get_config(httpd_req_t *req) {
   char json[MAX_JSON_SIZE];
   ERET( mqtt_get_config_json(json) );
-  printf("@ MQTT get config: json=%s\n", json);
+  printf("- MQTT get config: json=%s\n", json);
   ERET( httpd_resp_send_json(req, json) );
   return ESP_OK;
 }
@@ -80,7 +80,7 @@ static esp_err_t on_mqtt_set_config(httpd_req_t *req) {
   char json[MAX_JSON_SIZE];
   httpd_req_recv(req, json, req->content_len);
   json[req->content_len] = '\0';
-  printf("@ MQTT set config: json=%s\n", json);
+  printf("- MQTT set config: json=%s\n", json);
   ERET( mqtt_set_config_json(mqtt, json) );
   ERET( httpd_resp_send_json(req, "1") );
   return ESP_OK;
@@ -88,7 +88,7 @@ static esp_err_t on_mqtt_set_config(httpd_req_t *req) {
 
 
 static esp_err_t on_restart(httpd_req_t *req) {
-  printf("@ Restart\n");
+  printf("- Restart\n");
   esp_restart();
   return ESP_OK;
 }
@@ -96,14 +96,14 @@ static esp_err_t on_restart(httpd_req_t *req) {
 
 void on_mqtt(void *arg, esp_event_base_t base, int32_t id, void *data) {
   esp_mqtt_event_handle_t d = (esp_mqtt_event_handle_t) data;
-  esp_mqtt_client_handle_t h = d->client;
+  // esp_mqtt_client_handle_t h = d->client;
   switch(d->event_id) {
     case MQTT_EVENT_CONNECTED:
-    printf("@ Connected to MQTT broker\n");
+    printf("- Connected to MQTT broker\n");
     mqtt_connected = true;
     break;
     case MQTT_EVENT_DISCONNECTED:
-    printf("@ Disconnected from MQTT broker\n");
+    printf("- Disconnected from MQTT broker\n");
     mqtt_connected = false;
     break;
     default:
@@ -119,21 +119,21 @@ static void on_wifi(void *arg, esp_event_base_t base, int32_t id, void *data) {
   ERETV( esp_wifi_get_config(WIFI_IF_AP, (wifi_config_t*) &ap) );
   switch (id) {
     case WIFI_EVENT_STA_START:
-    printf("@ WiFi station mode started\n");
+    printf("- WiFi station mode started\n");
     printf("- Connect to WiFi AP\n");
     printf(": ssid=%s, password=%s\n", sta.ssid, sta.password);
     ERETV( esp_wifi_connect() );
     break;
     case WIFI_EVENT_STA_CONNECTED:
-    printf("@ Connected to WiFi AP '%s'\n", sta.ssid);
+    printf("- Connected to WiFi AP '%s'\n", sta.ssid);
     wifi_connected = true;
     break;
     case WIFI_EVENT_STA_DISCONNECTED:
-    printf("@ Disconnected from WiFi AP '%s'\n", sta.ssid);
+    printf("- Disconnected from WiFi AP '%s'\n", sta.ssid);
     wifi_connected = false;
     break;
     case WIFI_EVENT_AP_START:
-    printf("@ WiFi AP mode started\n");
+    printf("- WiFi AP mode started\n");
     printf(": ssid=%s, password=%s\n", ap.ssid, ap.password);
     ERETV( httpd_init(&httpd) );
     ERETV( httpd_on(httpd, "/sht21", HTTP_GET, on_sht21) );
@@ -143,19 +143,19 @@ static void on_wifi(void *arg, esp_event_base_t base, int32_t id, void *data) {
     ERETV( httpd_on(httpd, "/wifi_config_sta", HTTP_POST, on_wifi_set_config) );
     ERETV( httpd_on(httpd, "/mqtt_config", HTTP_GET, on_mqtt_get_config) );
     ERETV( httpd_on(httpd, "/mqtt_config", HTTP_POST, on_mqtt_set_config) );
-    ERETV( httpd_on(httpd, "/restart", HTTP_POST,  on_restart) );
+    // ERETV( httpd_on(httpd, "/restart", HTTP_POST,  on_restart) );
     ERETV( httpd_on(httpd, "/*", HTTP_GET, httpd_on_static) );
     break;
     case WIFI_EVENT_AP_STACONNECTED: {
     wifi_event_ap_staconnected_t *d = (wifi_event_ap_staconnected_t*) data;
-    printf("@ Station " MACSTR " joined, AID = %d (event)\n", MAC2STR(d->mac), d->aid);
+    printf("- Station " MACSTR " joined, AID = %d (event)\n", MAC2STR(d->mac), d->aid);
     } break;
     case WIFI_EVENT_AP_STADISCONNECTED: {
     wifi_event_ap_stadisconnected_t *d = (wifi_event_ap_stadisconnected_t*) data;
-    printf("@ Station " MACSTR " left, AID = %d (event)\n", MAC2STR(d->mac), d->aid);
+    printf("- Station " MACSTR " left, AID = %d (event)\n", MAC2STR(d->mac), d->aid);
     } break;
     default:
-    printf("@ Other WiFi event: %d\n", id);
+    printf("- Other WiFi event: %d\n", id);
     break;
   }
 }
@@ -165,7 +165,7 @@ static void on_ip(void *arg, esp_event_base_t base, int32_t id, void *data) {
   switch (id) {
     case IP_EVENT_STA_GOT_IP: {
     ip_event_got_ip_t *d = (ip_event_got_ip_t*) data;
-    printf("@ WiFi station got IP: IP=%s\n", ip4addr_ntoa(&d->ip_info.ip));
+    printf("- WiFi station got IP: IP=%s\n", ip4addr_ntoa(&d->ip_info.ip));
     ( mqtt_init(&mqtt) );
     ( esp_mqtt_client_register_event(mqtt, ESP_EVENT_ANY_ID, on_mqtt, mqtt) );
     ( esp_mqtt_client_start(mqtt) );
@@ -175,8 +175,6 @@ static void on_ip(void *arg, esp_event_base_t base, int32_t id, void *data) {
 
 
 void app_main() {
-  char mac[32];
-  chip_print_info();
   ERETV( nvs_init() );
   ERETV( spiffs_init() );
   ERETV( i2c_init(i2c, CONFIG_I2C_MASTER_SDA, CONFIG_I2C_MASTER_SCL, CONFIG_I2C_MASTER_CLK_SPEED) );
@@ -188,9 +186,8 @@ void app_main() {
   esp_event_handler_register(IP_EVENT, IP_EVENT_STA_GOT_IP, on_ip, NULL);
   ERETV( esp_wifi_set_mode(WIFI_MODE_APSTA) );
   ERETV( esp_wifi_start() );
-  TickType_t tpub = xTaskGetTickCount();
   while (true) {
-    vTaskDelayUntil(& tpub, mqtt_interval() / portTICK_RATE_MS);
+    vTaskDelay(mqtt_interval() / portTICK_RATE_MS);
     if (!wifi_connected) {
       ERETV( esp_wifi_connect() );
       continue;
