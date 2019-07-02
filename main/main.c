@@ -38,7 +38,7 @@ static esp_err_t deinit() {
 static esp_err_t on_sht21(httpd_req_t *req) {
   char json[256];
   ERET( sht21_json(i2c, json) );
-  printf("- On SHT21: json=%s\n", json);
+  printf("- SHT21: json=%s\n", json);
   ERET( httpd_resp_send_json(req, json) );
   return ESP_OK;
 }
@@ -47,7 +47,7 @@ static esp_err_t on_sht21(httpd_req_t *req) {
 static esp_err_t on_wifi_config_sta(httpd_req_t *req) {
   char json[256];
   ERET( wifi_get_config_json(WIFI_IF_STA, json) );
-  printf("- On WiFi get config station: json=%s\n", json);
+  printf("- WiFi get config station: json=%s\n", json);
   ERET( httpd_resp_send_json(req, json) );
   return ESP_OK;
 }
@@ -57,7 +57,7 @@ static esp_err_t on_wifi_set_config_sta(httpd_req_t *req) {
   char json[256];
   httpd_req_recv(req, json, req->content_len);
   json[req->content_len] = '\0';
-  printf("- On WiFi set config station: json=%s\n", json);
+  printf("- WiFi set config station: json=%s\n", json);
   ERET( wifi_set_config_json(WIFI_IF_STA, json) );
   ERET( httpd_resp_send_json(req, json) );
   return ESP_OK;
@@ -67,7 +67,7 @@ static esp_err_t on_wifi_set_config_sta(httpd_req_t *req) {
 static esp_err_t on_mqtt_config(httpd_req_t *req) {
   char json[256];
   ERET( mqtt_config_json(json) );
-  printf("- On MQTT get config: json=%s\n", json);
+  printf("- MQTT get config: json=%s\n", json);
   ERET( httpd_resp_send_json(req, json) );
   return ESP_OK;
 }
@@ -76,7 +76,7 @@ static esp_err_t on_mqtt_set_config(httpd_req_t *req) {
   char json[256];
   httpd_req_recv(req, json, req->content_len);
   json[req->content_len] = '\0';
-  printf("- On MQTT set config: json=%s\n", json);
+  printf("- MQTT set config: json=%s\n", json);
   ERET( mqtt_set_config_json(mqtt, json) );
   ERET( httpd_resp_send_json(req, json) );
   return ESP_OK;
@@ -84,7 +84,7 @@ static esp_err_t on_mqtt_set_config(httpd_req_t *req) {
 
 
 static esp_err_t on_restart(httpd_req_t *req) {
-  printf("- On Restart\n");
+  printf("- Restart\n");
   esp_restart();
   return ESP_OK;
 }
@@ -116,7 +116,7 @@ static void on_wifi(void *arg, esp_event_base_t base, int32_t id, void *data) {
   switch (id) {
     case WIFI_EVENT_STA_START:
     printf("- WiFi station mode started\n");
-    printf("- Connect to WiFi AP\n");
+    printf("# Connect to WiFi AP\n");
     printf(": ssid=%s, password=%s\n", sta.ssid, sta.password);
     ERETV( esp_wifi_connect() );
     break;
@@ -183,7 +183,7 @@ void app_main() {
   ERETV( esp_wifi_set_mode(WIFI_MODE_APSTA) );
   ERETV( esp_wifi_start() );
   while (true) {
-    printf("- Waiting %d ms ...\n", mqtt_interval());
+    printf("# Waiting %d ms ...\n", mqtt_interval());
     vTaskDelay(mqtt_interval() / portTICK_RATE_MS);
     if (!wifi_connected) {
       ERETV( esp_wifi_connect() );
@@ -194,7 +194,7 @@ void app_main() {
     }
     char json[256];
     ERETV( sht21_json(i2c, json) );
-    printf("- Send to MQTT broker\n");
+    printf("# Send to MQTT broker\n");
     printf(": topic=%s, json=%s\n", "/charmender", json);
     esp_mqtt_client_publish(mqtt, "/charmender", json, strlen(json)+1, 0, 0);
   }

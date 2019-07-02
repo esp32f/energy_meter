@@ -26,7 +26,7 @@ esp_err_t mqtt_set_config_json(esp_mqtt_client_handle_t handle, const char *json
   json_string(json, "\"interval\":", uri);
   sscanf(uri, "%d", &interval);
   json_string(json, "\"uri\":", uri);
-  printf("@ MQTT set config: uri=%s, interval=%d\n", uri, interval);
+  printf("- MQTT set config: uri=%s, interval=%d\n", uri, interval);
   ERET( esp_mqtt_client_set_uri(handle, uri) );
   NVS_WRITE(nvs, nvs_set_u32(nvs, MQTT_INTERVAL_KEY, interval));
   NVS_WRITE(nvs, nvs_set_str(nvs, MQTT_URI_KEY, uri));
@@ -39,13 +39,14 @@ esp_err_t mqtt_init(esp_mqtt_client_handle_t *handle) {
   NVS_READ(nvs, nvs_get_str(nvs, MQTT_URI_KEY, uri, &length));
   if (strstr(uri, "mqtt://") != uri) strcpy(uri, MQTT_URI_DEFAULT);
   NVS_READ(nvs, nvs_get_u32(nvs, MQTT_INTERVAL_KEY, &interval));
-  printf("- Init MQTT client: uri=%s, interval=%d\n", uri, interval);
+  printf("# Init MQTT client\n");
+  printf(": uri=%s, interval=%d\n", uri, interval);
   esp_mqtt_client_config_t c = {
     .uri = uri
   };
   *handle = esp_mqtt_client_init(&c);
   if (*handle == NULL) {
-    printf("MQTT init failed!\n");
+    printf("* MQTT init failed!\n");
     return ESP_FAIL;
   }
   return ESP_OK;
