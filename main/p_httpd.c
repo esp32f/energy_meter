@@ -59,11 +59,7 @@ esp_err_t httpd_on(httpd_handle_t handle, const char *uri, httpd_method_t method
 
 
 esp_err_t httpd_on_static(httpd_req_t *req) {
-<<<<<<< HEAD
-  printf("@ HTTPD Static: uri=%s\n", req->uri);
-=======
   printf("- HTTPD Static: uri=%s\n", req->uri);
->>>>>>> working
   const char *index = strcmp(req->uri, "/") == 0? "index.html" : "";
   char path[FILE_PATH_MAX];
   sprintf(path, "/spiffs%s%s", req->uri, index);
