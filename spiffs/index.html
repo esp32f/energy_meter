@@ -19,16 +19,8 @@
   <input type="checkbox">
   <header><a href="#"><img src="ext/favicon.png"> ENERGY_METER</a></header>
   <ul>
-    <li><a href="#menu_a">Menu A</a></li>
     <li><a href="#status">Status</a></li>
-    <li>
-    <a>Configuration</a>
-    <menu>
-      <menuitem><a href="#config_wifi_ap">WiFi access point</a></menuitem>
-      <menuitem><a href="#config_wifi_sta">WiFi station</a></menuitem>
-      <menuitem><a href="#config_mqtt">MQTT communication</a></menuitem>
-    </menu>
-    </li>
+    <li><a href="#config">Config</a></li>
   </ul>
 </label>
 </nav>
@@ -44,41 +36,36 @@
 </section>
 
 
-<section id="config_wifi_ap">
-<form>
-<label>WiFi access point SSID</label>
+<section id="config">
+<form id="wifi_ap">
+<h2>Adhoc WiFi</h2>
+<label>Name</label>
 <input type="text" placeholder="e.g. energy_meter#1e2e3e4e5e6e" id="wifi_ap_ssid">
-<label>WiFi access point password</label>
+<label>Password</label>
 <input type="text" placeholder="e.g. admin#1e2e3e4e5e6e" id="wifi_ap_password">
 <input type="submit" value="Save">
 </form>
-</section>
 
-
-<section id="wifi">
-<form>
-<label>WiFi station target SSID</label>
+<form id="wifi_sta">
+<h2>WiFi network</h2>
+<label>Name</label>
 <input type="text" placeholder="e.g. energy_meter" id="ssid">
-<label>WiFi station target password</label>
+<label>Password</label>
 <input type="text" placeholder="e.g. energy_meter" id="password">
 <input type="submit" value="Save">
 </form>
-</section>
 
-
-<section id="mqtt">
-<form>
-<label>MQTT broker URL</label>
+<form id="mqtt">
+<h2>MQTT</h2>
+<label>Broker URL</label>
 <input type="text" placeholder="e.g. mqtt://test.mosquitto.org:1883" id="uri">
-<label>MQTT publish interval</label>
+<label>Publish interval</label>
 <input type="text" placeholder="e.g. 10000" id="interval">
 <input type="submit" value="Save">
 </form>
-</section>
 
-
-<section id="restart">
-<form>
+<form id="restart">
+<h2>Restart</h2>
 <input type="submit" value="Restart">
 </form>
 </section>
