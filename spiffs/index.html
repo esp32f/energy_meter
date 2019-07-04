@@ -2,15 +2,13 @@
 <html class="index">
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <link rel="stylesheet" href="https://unpkg.com/icon-batch/Webfont/index.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Righteous">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bare-css">
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
   <script src="https://code.highcharts.com/highcharts.js"></script>
   <script src="https://code.highcharts.com/highcharts-more.js"></script>
   <script src="https://code.highcharts.com/modules/annotations.js"></script>
   <script src="https://code.highcharts.com/modules/exporting.js"></script>
-  <link rel="shortcut icon" href="favicon.png">
+  <link rel="shortcut icon" href="ext/favicon.png">
+  <link rel="stylesheet" href="ext/bare-css.css">
   <link rel="stylesheet" href="index.css">
   <script async src="index.js"></script>
   <title>ENERGY_METER</title>
@@ -19,7 +17,7 @@
 <nav id="header">
 <label>
   <input type="checkbox">
-  <header><a href="#"><img src="favicon.png"> ENERGY_METER</a></header>
+  <header><a href="#"><img src="ext/favicon.png"> ENERGY_METER</a></header>
   <ul>
     <li><a href="#menu_a">Menu A</a></li>
     <li><a href="#status">Status</a></li>
@@ -57,23 +55,23 @@
 </section>
 
 
-<section id="config_wifi_sta">
+<section id="wifi">
 <form>
 <label>WiFi station target SSID</label>
-<input type="text" placeholder="e.g. energy_meter" id="wifi_sta_ssid">
+<input type="text" placeholder="e.g. energy_meter" id="ssid">
 <label>WiFi station target password</label>
-<input type="text" placeholder="e.g. energy_meter" id="wifi_sta_password">
+<input type="text" placeholder="e.g. energy_meter" id="password">
 <input type="submit" value="Save">
 </form>
 </section>
 
 
-<section id="config_mqtt">
+<section id="mqtt">
 <form>
 <label>MQTT broker URL</label>
-<input type="text" placeholder="e.g. mqtt://test.mosquitto.org:1883" id="mqtt_broker_url">
+<input type="text" placeholder="e.g. mqtt://test.mosquitto.org:1883" id="uri">
 <label>MQTT publish interval</label>
-<input type="text" placeholder="e.g. 10000" id="mqtt_publish_interval">
+<input type="text" placeholder="e.g. 10000" id="interval">
 <input type="submit" value="Save">
 </form>
 </section>

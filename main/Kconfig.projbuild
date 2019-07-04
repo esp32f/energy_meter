@@ -51,7 +51,7 @@ menu "Application configuration"
         The default MQTT broker URL to which this device connects as a client.
         The device publishes all its data there.
 
-    config MQTT_PUBISH_TOPIC
+    config MQTT_PUBLISH_TOPIC
       string "MQTT publish topic"
       default "/energy_meter"
       help
