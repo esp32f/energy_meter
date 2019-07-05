@@ -11,6 +11,7 @@
 #include "p_httpd.h"
 #include "p_mqtt.h"
 #include "macros.h"
+#include "boards.h"
 
 
 #define MAX_JSON_SIZE 256
