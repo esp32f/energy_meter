@@ -1,6 +1,6 @@
 {
   "name": "energy_meter",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "ESP32 code for 3-phase realtime energy metering device to MQTT server through WiFi.",
   "main": "index.js",
   "scripts": {
