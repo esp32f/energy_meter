@@ -72,6 +72,11 @@ Prepare features:
 - NVS partition generation
 
 
+### http
+
+- To write http apis here
+
+
 ### reference
 
 ```text
