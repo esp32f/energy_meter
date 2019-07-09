@@ -1,0 +1,35 @@
+{
+  "name": "energy_meter",
+  "version": "0.0.1",
+  "description": "ESP32 code for 3-phase realtime energy metering device to MQTT server through WiFi.",
+  "main": "index.js",
+  "scripts": {
+    "test": "exit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wolfram77/energy_meter.git"
+  },
+  "keywords": [
+    "esp32",
+    "esp",
+    "idf",
+    "energy",
+    "meter",
+    "3phase",
+    "realtime",
+    "device",
+    "mqtt",
+    "server",
+    "wifi"
+  ],
+  "author": "wolfram77@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/wolfram77/energy_meter/issues"
+  },
+  "homepage": "https://github.com/wolfram77/energy_meter#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
