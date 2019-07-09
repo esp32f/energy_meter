@@ -36,6 +36,35 @@ includePath:
 
 ## features
 
+- Voltage: RMS, pk-pk, FFT, quality, indicate peak load times
+- Current: RMS, pk-pk, FFT, usage, indicate internal load
+- Power: inst., apparent, true, bill usage rate monthly, sense device
+- Sense: temp., humidity, VOC, CO, CO2, PM, electric sound (devices)
+- Control: room supply, mode setup
+- More: state, district bill rate chart, predict bill, zero usage
+- More: incentive non peak load, new home device recommendations
+- More: shared info distribution, zero energy, device efficiency
+
+Prepare features:
+- Calculate time by fetching from NTP
+- Show energy use graph
+- Predict energy use based on current usage
+- Predict bill based on current use
+- Server size storage and analytics
+- Enable configuration, price chart fetching
+- Indicate energy source (coal, nuclear)
+- Indicate savings
+- Multiple access passwords
+- Skill to ask for energy bill (ga, alexa)
+- Previous month electricity bill, usage
+- Prepaid mode?
+- Reading averager
+- Use watchdog to make more self resets
+- Throughout day energy use
+- Room wise energy use (/ac)
+- Instruct fridge, ac?
+- Hacker prevention
+
 
 
 ## device
