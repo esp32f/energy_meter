@@ -21,11 +21,21 @@ includePath:
 - Healthy buildings
 
 
+
 ## conserve
+
+- Natural lighting & ventilation
+- Upgrade to energy efficient appliances
+- Device usage statistics (geyser, fridge, AC)
+- Reduce reliance on appliances (candlelight, water cooler)
+- Unplug devices when not in use
+- Batch tasks (baking all in one go)
+- Use renewable energy
 
 
 
 ## features
+
 
 
 ## device
