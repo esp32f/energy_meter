@@ -1,6 +1,6 @@
 {
   "name": "energy_meter",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "ESP32 code for 3-phase realtime energy metering device to MQTT server through WiFi.",
   "main": "index.js",
   "scripts": {
@@ -30,6 +30,6 @@
   },
   "homepage": "https://github.com/wolfram77/energy_meter#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.18.2"
   }
 }
